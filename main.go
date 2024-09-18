@@ -28,9 +28,17 @@ func NewCLICommand() map[string]CLICommand {
 	}
 }
 func commandExit() error {
+	os.Exit(0)
 	return nil
 }
 func commandHelp() error {
+	fmt.Println("Welcome to PokeDex!")
+	fmt.Println("Usage:")
+	commands := NewCLICommand()
+	for _, v := range commands {
+		fmt.Printf("%s : %s\n", v.name, v.description)
+	}
+
 	return nil
 }
 
@@ -49,11 +57,14 @@ func NewCLI(in io.Reader, out io.Writer) *CLI {
 func main() {
 	cli := NewCLI(os.Stdin, os.Stdout)
 	commands := NewCLICommand()
-	input := cli.readLine()
-	for k, v := range commands {
-		if k == input {
-			fmt.Fprintf(cli.out, v.name)
+	for i := 0; ; i++ {
+		input := cli.readLine()
+		for k, v := range commands {
+			if k == input {
+				v.callback()
+			}
 		}
+
 	}
 
 }
