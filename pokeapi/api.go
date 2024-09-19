@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func fetchPokeAPI(url string) (*LocationAPIResponse, error) {
+func FetchPokeAPI(url string) (*LocationAPIResponse, error) {
 	resp, err := http.Get(
 		url,
 	)
