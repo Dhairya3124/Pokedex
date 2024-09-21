@@ -3,9 +3,11 @@ package main
 import (
 	"bufio"
 	"fmt"
-	api "github.com/Dhairya3124/PokeDex/pokeapi"
 	"io"
 	"os"
+	"strings"
+
+	api "github.com/Dhairya3124/PokeDex/pokeapi"
 )
 
 type CLI struct {
@@ -24,7 +26,7 @@ func main() {
 	cli := NewCLI(os.Stdin, os.Stdout)
 	commands := api.GetCommands()
 	for i := 0; ; i++ {
-		input := cli.readLine()
+		input := strings.ToLower(cli.readLine())
 		for k, v := range commands {
 			if k == input {
 				if err := v.Callback(); err != nil {
