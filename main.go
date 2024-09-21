@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	api "github.com/Dhairya3124/PokeDex/pokeapi"
 	"io"
 	"os"
 )
@@ -10,7 +11,7 @@ import (
 type CLICommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback func() error
 }
 
 func NewCLICommand() map[string]CLICommand {
@@ -24,6 +25,16 @@ func NewCLICommand() map[string]CLICommand {
 			name:        "exit",
 			description: "Exit the Pokedex",
 			callback:    commandExit,
+		},
+		"map": {
+			name:        "map",
+			description: "Show location of the maps",
+			callback:    showResponseofAPI,
+		},
+		"mapb": {
+			name:        "map",
+			description: "Show location of the maps",
+			callback:    showPrevResponseofAPI,
 		},
 	}
 }
@@ -40,6 +51,44 @@ func commandHelp() error {
 	}
 
 	return nil
+}
+
+var pokeLocationURL = "https://pokeapi.co/api/v2/location-area/"
+var count = 0
+func showResponseofAPI() error {
+	locationResponse,finalCount, err := api.FetchPokeAPI(pokeLocationURL,count)
+	if err != nil {
+		return err
+	}
+	fmt.Println(locationResponse)
+	fmt.Println(finalCount)
+	count = finalCount
+	pokeLocationURL = locationResponse.Next
+	return nil
+
+}
+func showPrevResponseofAPI() error{
+	locationResponse,finalCount, err := api.FetchPokeAPI(pokeLocationURL,count)
+	if err != nil {
+		return err
+	}
+	if locationResponse.Previous!=nil{
+		locationResponse,finalCount, err = api.FetchPokeAPI(*locationResponse.Previous,count)
+		if err != nil {
+			return err
+		}
+		fmt.Println(locationResponse)
+
+
+	}else{
+		fmt.Println("No previous URL found")
+	}
+	count = finalCount
+	if locationResponse.Previous!=nil{
+	pokeLocationURL = *locationResponse.Previous
+	}
+	return nil
+
 }
 
 type CLI struct {
