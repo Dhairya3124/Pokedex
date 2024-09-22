@@ -26,3 +26,10 @@ func (c *Cache) Add(key string, val []byte) {
 	c.cache[key] = cacheEntry{val: val, createdAt: time.Now()}
 
 }
+func (c* Cache)Get(key string)([]byte,bool){
+	entry,ok:=c.cache[key]
+	if !ok{
+		return []byte{},false
+	}
+	return entry.val,true
+}
