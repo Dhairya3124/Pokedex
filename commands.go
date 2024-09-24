@@ -1,14 +1,16 @@
-package pokeapi
+package main
 
 import (
 	"fmt"
 	"os"
+
+	"github.com/Dhairya3124/PokeDex/pokeapi"
 )
 
 type CLICommand struct {
 	Name        string
 	Description string
-	Callback    func() error
+	Callback    func(Config *Config) error
 }
 
 func GetCommands() map[string]CLICommand {
@@ -35,11 +37,11 @@ func GetCommands() map[string]CLICommand {
 		},
 	}
 }
-func commandExit() error {
+func commandExit(Config *Config) error {
 	os.Exit(0)
 	return nil
 }
-func commandHelp() error {
+func commandHelp(Config *Config) error {
 	fmt.Println("Welcome to PokeDex!")
 	fmt.Println("Usage:")
 	commands := GetCommands()
@@ -53,8 +55,8 @@ func commandHelp() error {
 var pokeLocationURL = "https://pokeapi.co/api/v2/location-area/"
 var count = 0
 
-func showResponseofAPI() error {
-	locationResponse, finalCount, err := FetchPokeAPI(pokeLocationURL, count)
+func showResponseofAPI(Config *Config) error {
+	locationResponse, finalCount, err := pokeapi.FetchPokeAPI(pokeLocationURL, count)
 	if err != nil {
 		return err
 	}
@@ -65,13 +67,13 @@ func showResponseofAPI() error {
 	return nil
 
 }
-func showPrevResponseofAPI() error {
-	locationResponse, finalCount, err := FetchPokeAPI(pokeLocationURL, count)
+func showPrevResponseofAPI(Config *Config) error {
+	locationResponse, finalCount, err := pokeapi.FetchPokeAPI(pokeLocationURL, count)
 	if err != nil {
 		return err
 	}
 	if locationResponse.Previous != nil {
-		locationResponse, finalCount, err = FetchPokeAPI(*locationResponse.Previous, count)
+		locationResponse, finalCount, err = pokeapi.FetchPokeAPI(*locationResponse.Previous, count)
 		if err != nil {
 			return err
 		}
