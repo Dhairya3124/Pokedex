@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -52,40 +53,33 @@ func commandHelp(Config *Config) error {
 	return nil
 }
 
-var pokeLocationURL = "https://pokeapi.co/api/v2/location-area/"
-var count = 0
-
 func showResponseofAPI(Config *Config) error {
-	locationResponse, finalCount, err := pokeapi.FetchPokeAPI(pokeLocationURL, count)
+	locationResponse, err := pokeapi.FetchPokeAPI(Config.Next)
 	if err != nil {
 		return err
 	}
-	fmt.Println(locationResponse)
-	fmt.Println(finalCount)
-	count = finalCount
-	pokeLocationURL = locationResponse.Next
+	for _, location := range locationResponse.Results {
+		fmt.Println(location.Name)
+	}
+	Config.Next = locationResponse.Next
+	Config.Previous = locationResponse.Previous
 	return nil
 
 }
 func showPrevResponseofAPI(Config *Config) error {
-	locationResponse, finalCount, err := pokeapi.FetchPokeAPI(pokeLocationURL, count)
+	if Config.Previous == "" {
+		return errors.New("no previous URL found")
+	}
+	locationResponse, err := pokeapi.FetchPokeAPI(Config.Previous)
 	if err != nil {
 		return err
 	}
-	if locationResponse.Previous != nil {
-		locationResponse, finalCount, err = pokeapi.FetchPokeAPI(*locationResponse.Previous, count)
-		if err != nil {
-			return err
-		}
-		fmt.Println(locationResponse)
 
-	} else {
-		fmt.Println("No previous URL found")
+	for _, location := range locationResponse.Results {
+		fmt.Println(location.Name)
 	}
-	count = finalCount
-	if locationResponse.Previous != nil {
-		pokeLocationURL = *locationResponse.Previous
-	}
+	Config.Next = locationResponse.Next
+	Config.Previous = locationResponse.Previous
 	return nil
 
 }

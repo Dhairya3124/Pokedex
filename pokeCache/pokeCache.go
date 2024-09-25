@@ -28,14 +28,14 @@ func (c *Cache) Add(key string, val []byte) {
 	c.cache[key] = cacheEntry{val: val, createdAt: time.Now()}
 
 }
-func (c* Cache)Get(key string)([]byte,bool){
+func (c *Cache) Get(key string) ([]byte, bool) {
 	c.mux.RLock()
 	defer c.mux.RUnlock()
-	entry,ok:=c.cache[key]
-	if !ok{
-		return []byte{},false
+	entry, ok := c.cache[key]
+	if !ok {
+		return []byte{}, false
 	}
-	return entry.val,true
+	return entry.val, true
 }
 func (ch *Cache) ReapLoop() {
 	ticker := time.NewTicker(ch.interval)
