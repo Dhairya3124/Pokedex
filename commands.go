@@ -54,7 +54,7 @@ func commandHelp(Config *Config) error {
 }
 
 func showResponseofAPI(Config *Config) error {
-	locationResponse, err := pokeapi.FetchPokeAPI(Config.Next)
+	locationResponse, err := pokeapi.FetchPokeAPI(Config.Next, Config.Cache)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func showPrevResponseofAPI(Config *Config) error {
 	if Config.Previous == "" {
 		return errors.New("no previous URL found")
 	}
-	locationResponse, err := pokeapi.FetchPokeAPI(Config.Previous)
+	locationResponse, err := pokeapi.FetchPokeAPI(Config.Previous, Config.Cache)
 	if err != nil {
 		return err
 	}
