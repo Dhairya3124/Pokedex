@@ -11,7 +11,7 @@ import (
 type CLICommand struct {
 	Name        string
 	Description string
-	Callback    func(Config *Config) error
+	Callback    func(Config *Config, params string) error
 }
 
 func GetCommands() map[string]CLICommand {
@@ -36,13 +36,19 @@ func GetCommands() map[string]CLICommand {
 			Description: "Show location of the maps",
 			Callback:    showPrevResponseofAPI,
 		},
+		"explore":{
+
+			Name:        "explore",
+			Description: "Show detailed response of location",
+			Callback:    showLocationExplore,			
+		},
 	}
 }
-func commandExit(Config *Config) error {
+func commandExit(Config *Config, params string) error {
 	os.Exit(0)
 	return nil
 }
-func commandHelp(Config *Config) error {
+func commandHelp(Config *Config, params string) error {
 	fmt.Println("Welcome to PokeDex!")
 	fmt.Println("Usage:")
 	commands := GetCommands()
@@ -53,7 +59,7 @@ func commandHelp(Config *Config) error {
 	return nil
 }
 
-func showResponseofAPI(Config *Config) error {
+func showResponseofAPI(Config *Config, params string) error {
 	locationResponse, err := pokeapi.FetchPokeAPI(Config.Next, Config.Cache)
 	if err != nil {
 		return err
@@ -66,7 +72,7 @@ func showResponseofAPI(Config *Config) error {
 	return nil
 
 }
-func showPrevResponseofAPI(Config *Config) error {
+func showPrevResponseofAPI(Config *Config, params string) error {
 	if Config.Previous == "" {
 		return errors.New("no previous URL found")
 	}
@@ -82,4 +88,15 @@ func showPrevResponseofAPI(Config *Config) error {
 	Config.Previous = locationResponse.Previous
 	return nil
 
+}
+func showLocationExplore(Config *Config, params string)error{
+	locationDetailedResponse,err:=pokeapi.FetchPokeExploreAPI(params,Config.Cache)
+	if err!=nil{
+		return err
+	}
+	for _, encounter := range locationDetailedResponse.PokemonEncounters {
+		name := encounter.Pokemon.Name
+		fmt.Printf(" - %v\n", name)
+	}
+	return nil
 }

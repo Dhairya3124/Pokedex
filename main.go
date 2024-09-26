@@ -35,9 +35,19 @@ func main() {
 	config.Cache = pokecache.NewCache(time.Duration(60) * time.Second)
 	for i := 0; ; i++ {
 		input := strings.ToLower(cli.readLine())
+		params:=strings.Split(input, " ")
+
 		for k, v := range commands {
+			param:=""
+			if len(params)>1{
+				input=params[0]
+				param = params[1]
+			}else{
+				param= params[0]
+			}
 			if k == input {
-				if err := v.Callback(config); err != nil {
+				
+				if err := v.Callback(config,param); err != nil {
 					fmt.Println(err)
 				}
 			}
