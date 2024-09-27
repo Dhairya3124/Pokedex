@@ -42,6 +42,11 @@ func GetCommands() map[string]CLICommand {
 			Description: "Show detailed response of location",
 			Callback:    showLocationExplore,			
 		},
+		"catch": {
+			Name:        "catch",
+			Description: "Attempts to catch the given pokemon",
+			Callback:    commandCatch,
+		},
 	}
 }
 func commandExit(Config *Config, params string) error {
@@ -98,5 +103,8 @@ func showLocationExplore(Config *Config, params string)error{
 		name := encounter.Pokemon.Name
 		fmt.Printf(" - %v\n", name)
 	}
+	return nil
+}
+func commandCatch(Config *Config,params string)error{
 	return nil
 }
