@@ -19,6 +19,8 @@ type Config struct {
 	Next     string
 	Previous string
 	Cache    *pokecache.Cache
+	CurrentArea        string
+	CurrentAreaPokemon []string
 }
 
 func NewCLI(in io.Reader, out io.Writer) *CLI {
