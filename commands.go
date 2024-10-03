@@ -99,10 +99,14 @@ func showLocationExplore(Config *Config, params string)error{
 	if err!=nil{
 		return err
 	}
+	Config.CurrentAreaPokemon = []string{}
 	for _, encounter := range locationDetailedResponse.PokemonEncounters {
 		name := encounter.Pokemon.Name
+		Config.CurrentAreaPokemon = append(Config.CurrentAreaPokemon, name)
+
 		fmt.Printf(" - %v\n", name)
 	}
+	Config.CurrentArea = params
 	return nil
 }
 func commandCatch(Config *Config,params string)error{
