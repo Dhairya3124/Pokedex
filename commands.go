@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/Dhairya3124/PokeDex/pokeapi"
 )
@@ -110,5 +111,25 @@ func showLocationExplore(Config *Config, params string)error{
 	return nil
 }
 func commandCatch(Config *Config,params string)error{
+	pokemonToCatch:=params
+	fmt.Println(pokemonToCatch)
+	
+	if Config.CurrentArea == "" {
+		fmt.Println("Can't catch anything til you go somewhere.")
+		return nil
+	}
+
+	if !slices.Contains(Config.CurrentAreaPokemon, pokemonToCatch) {
+		fmt.Println("Pokemon is not found in this area.")
+		return nil
+	}
+
+	
+	resp, err := pokeapi.FetchPokemonDetailsAPI(pokemonToCatch, Config.Cache)
+	if err != nil {
+		return err
+	}
+	fmt.Println(resp)
+
 	return nil
 }
