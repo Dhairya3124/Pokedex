@@ -3,8 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"math/rand/v2"
 	"os"
 	"slices"
+	"time"
 
 	"github.com/Dhairya3124/PokeDex/pokeapi"
 )
@@ -123,13 +125,31 @@ func commandCatch(Config *Config,params string)error{
 		fmt.Println("Pokemon is not found in this area.")
 		return nil
 	}
+	if _, ok := Config.Pokedex[pokemonToCatch]; ok {
+		fmt.Println("You already have this pokemon")
+		return nil
+	}
 
 	
 	resp, err := pokeapi.FetchPokemonDetailsAPI(pokemonToCatch, Config.Cache)
 	if err != nil {
 		return err
 	}
-	fmt.Println(resp)
+	// fmt.Println(resp)
+	randCatchProb := rand.Float32()
+	experienceMultiplier := 1 - resp.BaseExperience/1000
 
+	catchProb := randCatchProb * float32(experienceMultiplier)
+
+	fmt.Printf("Throwing pokeball at %v...\n", pokemonToCatch)
+
+	time.Sleep(500 * time.Millisecond)
+
+	if catchProb >= 0.5 {
+		fmt.Printf("%v was caught!\n", pokemonToCatch)
+		Config.Pokedex[pokemonToCatch] = *resp
+	} else {
+		fmt.Printf("%v escaped!\n", pokemonToCatch)
+	}
 	return nil
 }

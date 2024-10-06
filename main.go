@@ -7,6 +7,8 @@ import (
 	"os"
 	"strings"
 	"time"
+	
+	pokeapi "github.com/Dhairya3124/PokeDex/pokeapi"
 
 	pokecache "github.com/Dhairya3124/PokeDex/pokeCache"
 )
@@ -21,6 +23,7 @@ type Config struct {
 	Cache    *pokecache.Cache
 	CurrentArea        string
 	CurrentAreaPokemon []string
+	Pokedex map[string]pokeapi.PokemonDetails
 }
 
 func NewCLI(in io.Reader, out io.Writer) *CLI {
@@ -35,6 +38,7 @@ func main() {
 	commands := GetCommands()
 	config := new(Config)
 	config.Cache = pokecache.NewCache(time.Duration(60) * time.Second)
+	config.Pokedex = map[string]pokeapi.PokemonDetails{}
 	for i := 0; ; i++ {
 		input := strings.ToLower(cli.readLine())
 		params:=strings.Split(input, " ")
