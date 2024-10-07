@@ -39,11 +39,11 @@ func GetCommands() map[string]CLICommand {
 			Description: "Show location of the maps",
 			Callback:    showPrevResponseofAPI,
 		},
-		"explore":{
+		"explore": {
 
 			Name:        "explore",
 			Description: "Show detailed response of location",
-			Callback:    showLocationExplore,			
+			Callback:    showLocationExplore,
 		},
 		"catch": {
 			Name:        "catch",
@@ -102,9 +102,9 @@ func showPrevResponseofAPI(Config *Config, params string) error {
 	return nil
 
 }
-func showLocationExplore(Config *Config, params string)error{
-	locationDetailedResponse,err:=pokeapi.FetchPokeExploreAPI(params,Config.Cache)
-	if err!=nil{
+func showLocationExplore(Config *Config, params string) error {
+	locationDetailedResponse, err := pokeapi.FetchPokeExploreAPI(params, Config.Cache)
+	if err != nil {
 		return err
 	}
 	Config.CurrentAreaPokemon = []string{}
@@ -117,10 +117,10 @@ func showLocationExplore(Config *Config, params string)error{
 	Config.CurrentArea = params
 	return nil
 }
-func commandCatch(Config *Config,params string)error{
-	pokemonToCatch:=params
+func commandCatch(Config *Config, params string) error {
+	pokemonToCatch := params
 	fmt.Println(pokemonToCatch)
-	
+
 	if Config.CurrentArea == "" {
 		fmt.Println("Can't catch anything til you go somewhere.")
 		return nil
@@ -135,7 +135,6 @@ func commandCatch(Config *Config,params string)error{
 		return nil
 	}
 
-	
 	resp, err := pokeapi.FetchPokemonDetailsAPI(pokemonToCatch, Config.Cache)
 	if err != nil {
 		return err
@@ -158,25 +157,24 @@ func commandCatch(Config *Config,params string)error{
 	}
 	return nil
 }
-func commandInspect(Config *Config,params string)error{
-	pokemonToInspect:=params
-	if pokemonResp,ok:=Config.Pokedex[pokemonToInspect];!ok{
+func commandInspect(Config *Config, params string) error {
+	pokemonToInspect := params
+	if pokemonResp, ok := Config.Pokedex[pokemonToInspect]; !ok {
 		fmt.Println("Pokemon not found")
-	}else{
-		fmt.Printf("Name: %v\n",pokemonResp.Name)
-		fmt.Printf("Height: %v\n",pokemonResp.Height)
-		fmt.Printf("Weight: %v\n",pokemonResp.Weight)
+	} else {
+		fmt.Printf("Name: %v\n", pokemonResp.Name)
+		fmt.Printf("Height: %v\n", pokemonResp.Height)
+		fmt.Printf("Weight: %v\n", pokemonResp.Weight)
 		fmt.Println("Stats:")
-		for _,stat:= range pokemonResp.Stats{
-			fmt.Printf("- %v:%v\n",stat.Stat.Name,stat.BaseStat)
+		for _, stat := range pokemonResp.Stats {
+			fmt.Printf("- %v:%v\n", stat.Stat.Name, stat.BaseStat)
 		}
 		fmt.Println("Types:")
-		for _,typ:= range pokemonResp.Types{
-			fmt.Printf("- %v\n",typ.Type.Name)
+		for _, typ := range pokemonResp.Types {
+			fmt.Printf("- %v\n", typ.Type.Name)
 		}
-		
+
 	}
-	
-	
+
 	return nil
 }

@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 	"time"
-	
+
 	pokeapi "github.com/Dhairya3124/PokeDex/pokeapi"
 
 	pokecache "github.com/Dhairya3124/PokeDex/pokeCache"
@@ -18,12 +18,12 @@ type CLI struct {
 	in  *bufio.Scanner
 }
 type Config struct {
-	Next     string
-	Previous string
-	Cache    *pokecache.Cache
+	Next               string
+	Previous           string
+	Cache              *pokecache.Cache
 	CurrentArea        string
 	CurrentAreaPokemon []string
-	Pokedex map[string]pokeapi.PokemonDetails
+	Pokedex            map[string]pokeapi.PokemonDetails
 }
 
 func NewCLI(in io.Reader, out io.Writer) *CLI {
@@ -41,19 +41,19 @@ func main() {
 	config.Pokedex = map[string]pokeapi.PokemonDetails{}
 	for i := 0; ; i++ {
 		input := strings.ToLower(cli.readLine())
-		params:=strings.Split(input, " ")
+		params := strings.Split(input, " ")
 
 		for k, v := range commands {
-			param:=""
-			if len(params)>1{
-				input=params[0]
+			param := ""
+			if len(params) > 1 {
+				input = params[0]
 				param = params[1]
-			}else{
-				param= params[0]
+			} else {
+				param = params[0]
 			}
 			if k == input {
-				
-				if err := v.Callback(config,param); err != nil {
+
+				if err := v.Callback(config, param); err != nil {
 					fmt.Println(err)
 				}
 			}

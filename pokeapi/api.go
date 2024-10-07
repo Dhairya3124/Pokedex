@@ -46,9 +46,9 @@ func FetchPokeAPI(url string, cache *pokecache.Cache) (*LocationAPIResponse, err
 
 }
 func FetchPokeExploreAPI(areaName string, cache *pokecache.Cache) (*LocationAPIResponseDetailed, error) {
-	
-		url := baseURL + "location-area/" + areaName
-		cacheResp, cacheHit := cache.Get(url)
+
+	url := baseURL + "location-area/" + areaName
+	cacheResp, cacheHit := cache.Get(url)
 	if cacheHit {
 		results := LocationAPIResponseDetailed{}
 		err := json.Unmarshal(cacheResp, &results)
@@ -57,7 +57,7 @@ func FetchPokeExploreAPI(areaName string, cache *pokecache.Cache) (*LocationAPIR
 		}
 		return &results, nil
 	}
-		
+
 	resp, err := http.Get(
 		url,
 	)
@@ -78,10 +78,9 @@ func FetchPokeExploreAPI(areaName string, cache *pokecache.Cache) (*LocationAPIR
 
 	return &jsonResp, nil
 
-	
 }
-func FetchPokemonDetailsAPI(pokemonName string,cache *pokecache.Cache)(*PokemonDetails,error){
-	url:=baseURL + "pokemon/" + pokemonName
+func FetchPokemonDetailsAPI(pokemonName string, cache *pokecache.Cache) (*PokemonDetails, error) {
+	url := baseURL + "pokemon/" + pokemonName
 	cacheResp, cacheHit := cache.Get(url)
 	if cacheHit {
 		results := PokemonDetails{}
@@ -91,7 +90,7 @@ func FetchPokemonDetailsAPI(pokemonName string,cache *pokecache.Cache)(*PokemonD
 		}
 		return &results, nil
 	}
-		
+
 	resp, err := http.Get(
 		url,
 	)
@@ -111,6 +110,5 @@ func FetchPokemonDetailsAPI(pokemonName string,cache *pokecache.Cache)(*PokemonD
 	}
 
 	return &jsonResp, nil
-
 
 }
