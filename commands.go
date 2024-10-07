@@ -55,6 +55,11 @@ func GetCommands() map[string]CLICommand {
 			Description: "Shows the details of the pokemon which is already caught",
 			Callback:    commandInspect,
 		},
+		"pokedex":{
+			Name:        "pokedex",
+			Description: "Shows the details of all the pokemon in the Pokedex",
+			Callback:    commandPokeDex,
+		},
 	}
 }
 func commandExit(Config *Config, params string) error {
@@ -152,6 +157,7 @@ func commandCatch(Config *Config, params string) error {
 	if catchProb >= 0.5 {
 		fmt.Printf("%v was caught!\n", pokemonToCatch)
 		Config.Pokedex[pokemonToCatch] = *resp
+		fmt.Println("You may inspect it with the inspect command")
 	} else {
 		fmt.Printf("%v escaped!\n", pokemonToCatch)
 	}
@@ -176,5 +182,18 @@ func commandInspect(Config *Config, params string) error {
 
 	}
 
+	return nil
+}
+func commandPokeDex(Config *Config, params string) error {
+	if len(Config.Pokedex) > 0{
+		fmt.Println("Your Pokedex:")
+		for k := range Config.Pokedex{
+			fmt.Printf("- %v\n",k)
+		}
+	}else{
+		fmt.Println("No Pokemon in Pokedex")
+	}
+	
+	
 	return nil
 }
