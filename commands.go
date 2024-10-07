@@ -50,6 +50,11 @@ func GetCommands() map[string]CLICommand {
 			Description: "Attempts to catch the given pokemon",
 			Callback:    commandCatch,
 		},
+		"inspect": {
+			Name:        "inspect",
+			Description: "Shows the details of the pokemon which is already caught",
+			Callback:    commandInspect,
+		},
 	}
 }
 func commandExit(Config *Config, params string) error {
@@ -151,5 +156,27 @@ func commandCatch(Config *Config,params string)error{
 	} else {
 		fmt.Printf("%v escaped!\n", pokemonToCatch)
 	}
+	return nil
+}
+func commandInspect(Config *Config,params string)error{
+	pokemonToInspect:=params
+	if pokemonResp,ok:=Config.Pokedex[pokemonToInspect];!ok{
+		fmt.Println("Pokemon not found")
+	}else{
+		fmt.Printf("Name: %v\n",pokemonResp.Name)
+		fmt.Printf("Height: %v\n",pokemonResp.Height)
+		fmt.Printf("Weight: %v\n",pokemonResp.Weight)
+		fmt.Println("Stats:")
+		for _,stat:= range pokemonResp.Stats{
+			fmt.Printf("- %v:%v\n",stat.Stat.Name,stat.BaseStat)
+		}
+		fmt.Println("Types:")
+		for _,typ:= range pokemonResp.Types{
+			fmt.Printf("- %v\n",typ.Type.Name)
+		}
+		
+	}
+	
+	
 	return nil
 }
